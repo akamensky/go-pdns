@@ -3,19 +3,19 @@ package pdns
 import (
 	"errors"
 	"fmt"
-	"strings"
 )
 
 type failure struct {
 	error   Error
+	Code    string `json:"code"`
 	Message string `json:"error"`
 }
 
 func (f *failure) getError() error {
 	var err error
 
-	// Well, this is ridiculous, but since pdns API does not return any codes have to do it like this
-	if strings.HasSuffix(f.Message, "already exists") {
+	switch f.Code {
+	case "ERR_ZONE_ALREADY_EXISTS":
 		err = ErrZoneAlreadyExists
 	}
 
